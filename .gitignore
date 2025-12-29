@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+venv/
+env/
+
+# Distribution / Packaging
+build/
+dist/
+*.egg-info/
+
+# Streamlit
+.streamlit/secrets.toml
+# Note: config.toml IS committed as it contains theme settings
+
+# IDEs
+.vscode/
+.idea/
+
+# Testing / Artifacts
+chroma_db/
+.pytest_cache/
+test_results/
+reports/
+logs/
+
+# Mac
+.DS_Store
