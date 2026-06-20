@@ -110,6 +110,8 @@ class IntentFilter:
         "if that would be useful."
     )
 
+    _COMPILED_PATTERNS = [re.compile(p) for p in FORBIDDEN_PATTERNS]
+
     @staticmethod
     def is_safe(user_query: str) -> bool:
         """
@@ -119,8 +121,8 @@ class IntentFilter:
         # Normalize: lowercase for case-insensitive matching
         query_lower = user_query.lower()
 
-        for pattern in IntentFilter.FORBIDDEN_PATTERNS:
-            if re.search(pattern, query_lower):
+        for pattern in IntentFilter._COMPILED_PATTERNS:
+            if pattern.search(query_lower):
                 return False
         
         return True

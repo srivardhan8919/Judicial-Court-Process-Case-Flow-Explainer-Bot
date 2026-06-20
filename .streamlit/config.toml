@@ -5,3 +5,7 @@ backgroundColor="#F8F9FA"
 secondaryBackgroundColor="#FFFFFF"
 textColor="#1F2937"
 font="sans serif"
+
+[server]
+headless = true
+port = 10000

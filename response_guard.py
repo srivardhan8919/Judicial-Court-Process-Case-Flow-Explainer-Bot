@@ -34,8 +34,6 @@ class ResponseGuard:
         r"\bare\s+illegal\b"
     ]
 
-    # ✅ Explicit refusal detection
-    # Any refusal is treated as BLOCKED_OUTPUT for governance/testing
     REFUSAL_PATTERNS = [
         r"\bi\s+cannot\b",
         r"\bi\s+can't\b",
@@ -45,6 +43,9 @@ class ResponseGuard:
         r"\bi\s+do\s+not\s+provide\b",
         r"\brefuse\b"
     ]
+
+    _COMPILED_FORBIDDEN = [re.compile(p) for p in FORBIDDEN_TERMS]
+    _COMPILED_REFUSAL = [re.compile(p) for p in REFUSAL_PATTERNS]
 
     BLOCK_MESSAGE = (
         "Compliance Alert: The generated response was blocked because it contained "
@@ -69,13 +70,13 @@ class ResponseGuard:
         response_lower = llm_response.lower()
 
         # 1️⃣ Explicit refusal → classify as BLOCKED_OUTPUT
-        for pattern in ResponseGuard.REFUSAL_PATTERNS:
-            if re.search(pattern, response_lower):
+        for pattern in ResponseGuard._COMPILED_REFUSAL:
+            if pattern.search(response_lower):
                 return ResponseGuard.BLOCK_MESSAGE
 
         # 2️⃣ User-directed advisory language → BLOCK
-        for pattern in ResponseGuard.FORBIDDEN_TERMS:
-            if re.search(pattern, response_lower):
+        for pattern in ResponseGuard._COMPILED_FORBIDDEN:
+            if pattern.search(response_lower):
                 return ResponseGuard.BLOCK_MESSAGE
 
         # 3️⃣ Otherwise safe

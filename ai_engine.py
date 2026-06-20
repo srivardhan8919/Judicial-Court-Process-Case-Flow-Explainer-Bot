@@ -1,5 +1,13 @@
+import streamlit as st
 import google.generativeai as genai
 from config import Config
+
+@st.cache_resource
+def get_cached_model(model_name, system_instruction):
+    return genai.GenerativeModel(
+        model_name=model_name,
+        system_instruction=system_instruction
+    )
 
 
 class AIEngine:
@@ -73,7 +81,7 @@ not legal assistance.
             return "System Error: API Configuration Missing. Please provide an API Key in the settings or check server logs."
 
         try:
-            model = genai.GenerativeModel(
+            model = get_cached_model(
                 model_name=Config.MODEL_NAME,
                 system_instruction=AIEngine._SYSTEM_PROMPT
             )
